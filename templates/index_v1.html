@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Parking Detector</title>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; background-color: #f4f4f9; }
+        h1 { color: #333; }
+        .video-container { margin-top: 20px; border: 5px solid #333; display: inline-block; }
+        img { max-width: 100%; height: auto; }
+    </style>
+</head>
+<body>
+    <h1>ระบบตรวจจับช่องจอดรถด้วย YOLOv8</h1>
+    <p>Real-time Detection on Localhost</p>
+    
+    <div class="video-container">
+        <img src="{{ url_for('video_feed') }}" alt="Video Stream">
+    </div>
+</body>
+</html>

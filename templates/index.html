@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Parking Dashboard</title>
+    <style>
+        body { font-family: Arial, sans-serif; background-color: #1e1e2f; color: white; margin: 0; padding: 20px; }
+        h1 { text-align: center; }
+
+        .container { display: flex; gap: 20px; justify-content: center; flex-wrap: wrap; }
+        .box { background: #2a2a40; padding: 20px; border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.5); }
+
+        .video-box { flex: 1; min-width: 600px; text-align: center; }
+        img { max-width: 100%; border-radius: 8px; }
+
+        .ui-box { flex: 1; min-width: 400px; }
+        .parking-grid { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fill, minmax(80px, 1fr)); /* ปรับขนาดช่องได้ */
+            gap: 15px; 
+            margin-top: 20px;
+        }
+
+        .slot {
+            height: 120px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            font-weight: bold;
+            color: white;
+            transition: 0.3s;
+            border: 2px solid #fff;
+        }
+        .empty { background-color: #28a745; } 
+        .occupied { background-color: #dc3545; } 
+
+    </style>
+</head>
+<body>
+
+    <h1>Smart Parking System Dashboard</h1>
+
+    <div class="container">
+        <div class="box video-box">
+            <h2>Live Camera</h2>
+            <img src="{{ url_for('video_feed') }}" alt="Video Stream">
+        </div>
+
+        <div class="box ui-box">
+            <h2>Parking Lot Map</h2>
+            <div id="parking-map" class="parking-grid">
+                </div>
+        </div>
+    </div>
+
+    <script>
+
+        function fetchParkingStatus() {
+            fetch('/status')
+                .then(response => response.json())
+                .then(data => {
+                    const mapContainer = document.getElementById('parking-map');
+                    mapContainer.innerHTML = ''; 
+
+                    data.slots.forEach((isOccupied, index) => {
+                        const slotDiv = document.createElement('div');
+
+                        slotDiv.className = isOccupied ? 'slot occupied' : 'slot empty';
+
+                        slotDiv.innerText = 'P' + (index + 1);
+                        
+                        mapContainer.appendChild(slotDiv);
+                    });
+                })
+                .catch(err => console.error("Error fetching status:", err));
+        }
+
+        setInterval(fetchParkingStatus, 1000);
+
+        fetchParkingStatus();
+    </script>
+
+</body>
+</html>
